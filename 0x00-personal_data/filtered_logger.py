@@ -23,8 +23,8 @@ class RedactingFormatter(logging.Formatter):
         """ Filters values in incoming log records """
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.msg, self.SEPARATOR)
-        formatted_msg = logging.Formatter(self.FORMAT).format(record)
-        return formatted_msg
+        record.msg = record.msg.replace(';', '; ')
+        return logging.Formatter(self.FORMAT).format(record).strip()
 
 
 def filter_datum(fields: List[str], redaction: str,
