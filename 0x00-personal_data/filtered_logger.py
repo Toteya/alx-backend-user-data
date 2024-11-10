@@ -8,7 +8,7 @@ import os
 import re
 from typing import List
 
-PII_FIELDS = ('email', 'phone', 'ssn', 'password', 'ip')
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 class RedactingFormatter(logging.Formatter):
@@ -47,8 +47,9 @@ def get_logger() -> logging.Logger:
     logger = logging.getLogger('user_data')
     logger.setLevel(logging.INFO)
 
-    stream_handler = logging.StreamHandler
-    stream_handler.setFormatter(RedactingFormatter)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    stream_handler.setLevel(logging.INFO)
     logger.addHandler(stream_handler)
 
     return logger
@@ -64,3 +65,33 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=os.getenv('PERSONAL_DATA_DB_NAME')
     )
     return db_connection
+
+
+def main():
+    """ Entry point
+    """
+    db = get_db()
+    cursor = db.cursor()
+    logger = get_logger()
+    cursor.execute('SELECT * FROM users;')
+    results = cursor.fetchall()
+
+    for result in results:
+        message = ''
+        for i in range(len(result)):
+            message += ' {}={};'.format(cursor.description[i][0], result[i])
+        message = message.strip()
+        log_record = logging.LogRecord(
+            logger.name,
+            logger.level,
+            None,
+            None,
+            message,
+            None,
+            None
+        )
+        logger.handle(log_record)
+
+
+if __name__ == '__main__':
+    main()
