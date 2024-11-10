@@ -5,11 +5,11 @@ encrypt password
 import bcrypt
 
 
-def hash_password(password: str) -> str:
+def hash_password(password: str) -> bytes:
     """Returns a salted, hashed password
     """
-    password_bytes = password.encode('utf-8')
+    bytes_password = password.encode('utf-8')
     salt = bcrypt.gensalt()
 
-    hash = bcrypt.hashpw(password_bytes, salt)
+    hash = bcrypt.hashpw(bytes_password, salt)
     return hash
