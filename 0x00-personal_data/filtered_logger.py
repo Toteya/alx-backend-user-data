@@ -3,6 +3,8 @@
 filtered_logger:
 """
 import logging
+import mysql.connector
+import os
 import re
 from typing import List
 
@@ -50,3 +52,15 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """ Returns a connector to a database
+    """
+    db_connection = mysql.connector.connect(
+        user=os.getenv('PERSONAL_DATA_DB_USERNAME'),
+        password=os.getenv('PERSONAL_DATA_DB_PASSWORD'),
+        host=os.getenv('PERSONAL_DATA_DB_HOST'),
+        database=os.getenv('PERSONAL_DATA_DB_NAME')
+    )
+    return db_connection
