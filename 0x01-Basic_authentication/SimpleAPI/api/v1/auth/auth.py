@@ -18,7 +18,8 @@ class Auth:
             return True
         if path is None:
             return True
-        if path.rstrip('/') not in [ep.rstrip('/') for ep in excluded_paths]:
+        excl_paths = [ep.rstrip('/') for ep in excluded_paths]
+        if path.rstrip('/') not in excl_paths:
             return True
         return False
 
@@ -27,9 +28,9 @@ class Auth:
         """
         if request is None:
             return None
-        if 'Authorization' not in request:
+        if 'Authorization' not in request.headers:
             return None
-        return request.get('Authorization')
+        return request.headers.get('Authorization')
 
     def current_user(self, request=None) -> TypeVar('User'):
         """ Current user
