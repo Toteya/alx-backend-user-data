@@ -37,7 +37,7 @@ class BasicAuth(Auth):
         try:
             decoded_bytes = base64.b64decode(base64_authorization_header)
             decoded_utf_str = decoded_bytes.decode('utf-8')
-        except base64.binascii.Error:
+        except (base64.binascii.Error, UnicodeDecodeError):
             return None
 
         return decoded_utf_str
@@ -77,4 +77,15 @@ class BasicAuth(Auth):
         user = users[0]
         if not user.is_valid_password(user_pwd):
             return None
+        return user
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ Overloads Auth and retrieves the User instance for a request
+        """
+        auth_header = self.authorization_header(request)
+        b64_auth_header = self.extract_base64_authorization_header(auth_header)
+        decoded_str = self.decode_base64_authorization_header(b64_auth_header)
+        user_email, user_pwd = self.extract_user_credentials(decoded_str)
+        user = self.user_object_from_credentials(user_email, user_pwd)
+
         return user
