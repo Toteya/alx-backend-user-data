@@ -4,6 +4,8 @@ basic_auth: Basic Authorization
 """
 from api.v1.auth.auth import Auth
 import base64
+from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -24,8 +26,7 @@ class BasicAuth(Auth):
         return authorization_header.lstrip('Basic ')
 
     def decode_base64_authorization_header(
-            self,
-            base64_authorization_header: str
+            self, base64_authorization_header: str
     ) -> str:
         """ Returns the decodes value of a Base64 string
         """
@@ -42,8 +43,7 @@ class BasicAuth(Auth):
         return decoded_utf_str
 
     def extract_user_credentials(
-            self,
-            decoded_base64_authorization_header: str
+            self, decoded_base64_authorization_header: str
     ) -> (str, str):
         """ Returns the user email and password from the Base64 decoded value
         """
@@ -57,3 +57,24 @@ class BasicAuth(Auth):
         email = decoded_base64_authorization_header.split(':')[0]
         password = decoded_base64_authorization_header.split(':')[1]
         return email, password
+
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str
+    ) -> TypeVar('User'):
+        """ Returns the User instance corresponding to the given email and
+        password
+        """
+        if user_email is None:
+            return None
+        if user_pwd is None:
+            return None
+        try:
+            users = User.search({'email': user_email})
+        except KeyError:
+            users = None
+        if not users:
+            return None
+        user = users[0]
+        if not user.is_valid_password(user_pwd):
+            return None
+        return user
