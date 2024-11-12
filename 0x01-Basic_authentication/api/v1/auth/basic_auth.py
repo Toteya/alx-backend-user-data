@@ -74,16 +74,10 @@ class BasicAuth(Auth):
             users = None
         if not users:
             return None
-        # user = users[0]
         for user in users:
             if user.is_valid_password(user_pwd):
                 return user
         return None
-        """
-        if not user.is_valid_password(user_pwd):
-            return None
-        return user
-        """
 
     def current_user(self, request=None) -> TypeVar('User'):
         """ Overloads Auth and retrieves the User instance for a request
