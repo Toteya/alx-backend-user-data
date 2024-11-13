@@ -4,6 +4,7 @@ auth: authentication module
 """
 from typing import List
 from typing import TypeVar
+import os
 
 
 class Auth:
@@ -38,3 +39,11 @@ class Auth:
         """ Current user
         """
         return None
+
+    def session_cookie(self, request=None):
+        """ Returns a cookie value from a request
+        """
+        if request is None:
+            return None
+        
+        return request.cookies.get(os.getenv('SESSION_NAME'))
