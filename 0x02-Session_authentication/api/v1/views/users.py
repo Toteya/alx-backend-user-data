@@ -125,6 +125,7 @@ def update_user(user_id: str = None) -> str:
     user.save()
     return jsonify(user.to_json()), 200
 
+
 @app_views.route('/users/me', methods=['GET'], strict_slashes=False)
 def me():
     """ Retrieves authenticated User object
