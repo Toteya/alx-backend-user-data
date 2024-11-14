@@ -12,6 +12,8 @@ class SessionExpAuth(SessionAuth):
     Session Authentication Expiration class
     """
     def __init__(self):
+        """ Initialise authentication instance
+        """
         try:
             self.session_duration = int(os.getenv('SESSION_DURATION'))
         except ValueError:
@@ -32,6 +34,8 @@ class SessionExpAuth(SessionAuth):
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
+        """ Returns a user id based on the given session id
+        """
         if session_id is None:
             return None
         session_dictionary = self.user_id_by_session_id.get(session_id)
