@@ -16,7 +16,7 @@ class SessionExpAuth(SessionAuth):
         """
         try:
             self.session_duration = int(os.getenv('SESSION_DURATION'))
-        except ValueError:
+        except (ValueError, TypeError):
             self.session_duration = 0
         super().__init__()
 
