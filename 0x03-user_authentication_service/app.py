@@ -3,7 +3,7 @@
 module app: A Flask web application
 """
 from auth import Auth
-from flask import abort, Flask, jsonify, make_response, request
+from flask import abort, Flask, jsonify, make_response, request, redirect
 
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ def users():
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
-    """ Login an existing user
+    """ Login an existing user - new session
     """
     email = request.form.get('email')
     password = request.form.get('password')
@@ -42,6 +42,16 @@ def login():
                                       "message": "logged in"}))
     response.set_cookie('session_id', session_id)
     return response
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """ Logs out a user - end a session
+    """
+    session_id = request.form.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
+        abort(403)
+    AUTH.destroy_session(user.id)
 
 
 if __name__ == '__main__':
