@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
-from typing import TypeVar
+from typing import Type
 from user import Base, User
 
 
@@ -32,7 +32,7 @@ class DB:
 
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
+    def add_user(self, email: str, hashed_password: str) -> Type[User]:
         """ Adds a user to the database and returns the user instance
         """
         user = User(email=email, hashed_password=hashed_password)
@@ -40,7 +40,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> TypeVar('User'):
+    def find_user_by(self, **kwargs) -> Type[User]:
         """ Returns a matching user as filtered by the given keyword arguments
         """
         user = self._session.query(User).filter_by(**kwargs).first()
@@ -57,3 +57,4 @@ class DB:
                 setattr(user, k, v)
             else:
                 raise ValueError
+        self._session.commit()
