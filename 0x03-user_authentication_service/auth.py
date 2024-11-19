@@ -5,7 +5,7 @@ auth module: implements user authentication
 import bcrypt
 
 
-def _hash_password(password):
+def _hash_password(password: str) -> bytes:
     """ Converts and returns the given passsword in bytes
     """
     password_bytes = password.encode('utf-8')
