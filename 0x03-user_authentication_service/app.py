@@ -24,7 +24,7 @@ def users():
     password = request.form.get('password')
     try:
         AUTH.register_user(email, password)
-        output = {"email": "{}", "message": "user created"}
+        output = {"email": "{}".format(email), "message": "user created"}
     except ValueError:
         output = {"message": "email already registered"}
     return jsonify(output)
@@ -49,7 +49,7 @@ def login():
 def logout():
     """ Logs out a user - end a session
     """
-    session_id = request.form.get('session_id')
+    session_id = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
@@ -57,11 +57,12 @@ def logout():
     redirect('/')
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET'], strict_slashes=False)
 def profile():
     """ Returns a user profile if the given session_id exists
     """
-    session_id = request.form.get('session_id')
+    session_id = request.cookies.get('session_id')
+    print(f'SESSION: {session_id}')
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
