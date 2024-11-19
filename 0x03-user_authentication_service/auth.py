@@ -44,7 +44,7 @@ class Auth:
         """
         return str(uuid.uuid4())
 
-    def create_session(self, email):
+    def create_session(self, email: str) -> str:
         """ Creates a new session_id for the given user
         """
         try:
@@ -59,10 +59,15 @@ class Auth:
         """ Returns the user matching the given session_id
         """
         try:
-            user = self._db.find_user_by({'session_id': session_id})
+            user = self._db.find_user_by(session_id=session_id)
         except (NoResultFound, InvalidRequestError):
             return None
         return user
+
+    def destroy_session(self, user_id: str) -> None:
+        """ Destroys a session
+        """
+        self._db.update_user(user_id=user_id, session_id=None)
 
 
 def _hash_password(password: str) -> bytes:
