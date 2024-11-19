@@ -4,6 +4,7 @@ auth module: implements user authentication
 """
 import bcrypt
 from db import DB
+from sqlalchemy.orm.exc import InvalidRequestError
 from db import NoResultFound
 from typing import Type
 from user import User
@@ -34,7 +35,7 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-        except NoResultFound:
+        except (NoResultFound, InvalidRequestError):
             return False
         return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
 
@@ -59,7 +60,7 @@ class Auth:
         """
         try:
             user = self._db.find_user_by({'session_id': session_id})
-        except NoResultFound:
+        except NoResultFound, Inva:
             return None
         return user
 
