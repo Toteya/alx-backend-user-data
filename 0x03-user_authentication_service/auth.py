@@ -4,7 +4,7 @@ auth module: implements user authentication
 """
 import bcrypt
 from db import DB
-from sqlalchemy.orm.exc import InvalidRequestError
+from sqlalchemy.exc import InvalidRequestError
 from db import NoResultFound
 from typing import Type
 from user import User
