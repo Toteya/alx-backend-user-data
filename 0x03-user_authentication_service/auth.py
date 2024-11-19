@@ -60,7 +60,7 @@ class Auth:
         """
         try:
             user = self._db.find_user_by({'session_id': session_id})
-        except NoResultFound, Inva:
+        except (NoResultFound, InvalidRequestError):
             return None
         return user
 
