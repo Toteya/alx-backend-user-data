@@ -28,6 +28,7 @@ def users():
         output = {"message": "email already registered"}
     return jsonify(output)
 
+
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """ Login an existing user
@@ -37,7 +38,8 @@ def login():
     if not AUTH.valid_login(email=email, password=password):
         abort(401)
     session_id = AUTH.create_session(email)
-    response = make_response(jsonify({"email": "{}".format(email), "message": "logged in"}))
+    response = make_response(jsonify({"email": "{}".format(email),
+                                      "message": "logged in"}))
     response.set_cookie('session_id', session_id)
     return response
 
