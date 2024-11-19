@@ -43,6 +43,7 @@ def login():
     response.set_cookie('session_id', session_id)
     return response
 
+
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def logout():
     """ Logs out a user - end a session
