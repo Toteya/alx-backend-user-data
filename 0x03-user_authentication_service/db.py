@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import NoResultFound
-
+from typing import TypeVar
 from user import Base, User
 
 
@@ -32,7 +32,7 @@ class DB:
 
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str):
+    def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
         """ Adds a user to the database and returns the user instance
         """
         user = User()
@@ -42,10 +42,18 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs):
-        """ Returns the match as filtered by the given keyword arguments
+    def find_user_by(self, **kwargs) -> TypeVar('User'):
+        """ Returns a matching user as filtered by the given keyword arguments
         """
-        result = self._session.query(User).filter_by(**kwargs).first()
-        if result is None:
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user is None:
             raise NoResultFound
-        return result
+        return user
+
+    def update_user(self, user_id: str, **kwargs) -> None:
+        """ Updates a user based on the given keyword arguments
+        """
+        user = self.find_user_by(id=user_id)
+        for k, v in kwargs.items():
+            if hasattr(user, k):
+                setattr(user, k, v)
