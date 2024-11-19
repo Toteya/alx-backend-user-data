@@ -3,7 +3,8 @@
 module app: A Flask web application
 """
 from auth import Auth
-from flask import abort, Flask, jsonify, make_response, request, redirect
+from flask import abort, Flask, jsonify, make_response
+from flask import request, redirect, url_for
 
 
 app = Flask(__name__)
@@ -53,6 +54,7 @@ def logout():
     if user is None:
         abort(403)
     AUTH.destroy_session(user.id)
+    redirect(url_for(welcome))
 
 
 if __name__ == '__main__':
