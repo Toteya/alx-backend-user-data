@@ -43,6 +43,17 @@ class Auth:
         """
         return str(uuid.uuid4())
 
+    def create_session(self, email):
+        """ Creates a new session_id for the given user
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return None
+        session_id = self._generate_uuid()
+        self._db.update_user(user.id, session_id=session_id)
+        return session_id
+
 
 def _hash_password(password: str) -> bytes:
     """ Converts and returns the given passsword in bytes
