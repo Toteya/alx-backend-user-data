@@ -3,7 +3,7 @@
 module app: A Flask web application
 """
 from auth import Auth
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 
 app = Flask(__name__)
@@ -17,15 +17,17 @@ def welcome():
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
-def users(email: str, password: str):
+def users():
     """Handles POST /users"""
+    email = request.form.get('email')
+    password = request.form.get('password')
     try:
-        AUTH.register_user(email=email, password=password)
-        output = {"email": "{}", "message": "user created".format(email)}
+        AUTH.register_user(email, password)
+        output = {"email": "{}".format(email), "message": "user created"}
     except ValueError:
         output = {"message": "email already registered"}
     return jsonify(output)
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port="5000")
+    app.run(host="0.0.0.0", port="5000", debug=True)
