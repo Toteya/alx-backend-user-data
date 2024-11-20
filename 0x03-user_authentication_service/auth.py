@@ -81,7 +81,7 @@ class Auth:
         self._db.update_user(user.id, reset_token=token)
         return token
 
-    def update_password(self, reset_token: str, password: str):
+    def update_password(self, reset_token: str, password: str) -> None:
         """ Resets/updates the password
         """
         try:
