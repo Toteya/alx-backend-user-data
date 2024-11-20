@@ -39,8 +39,7 @@ def login():
     if not AUTH.valid_login(email=email, password=password):
         abort(401)
     session_id = AUTH.create_session(email)
-    response = make_response(jsonify({"email": "{}".format(email),
-                                      "message": "logged in"}))
+    response = make_response(jsonify({"email": email, "message": "logged in"}))
     response.set_cookie('session_id', session_id)
     return response
 
@@ -69,6 +68,18 @@ def profile():
         abort(403)
     output = {"email": "{}".format(user.email)}
     return jsonify(output)
+
+
+@app.route('/reset_password', methods=['POST'], strict_slashes=False)
+def get_reset_password_token():
+    """ Resets the password
+    """
+    email = request.form.get('email')
+    try:
+        token = AUTH.get_reset_password_token(email)
+    except ValueError:
+        abort(403)
+    return jsonify({"email": email, "reset_token": token})
 
 
 if __name__ == '__main__':
