@@ -24,7 +24,7 @@ def users():
     password = request.form.get('password')
     try:
         AUTH.register_user(email, password)
-        output = {"email": "{}".format(email), "message": "user created"}
+        output = {"email": email, "message": "user created"}
     except ValueError:
         output = {"message": "email already registered"}
     return jsonify(output)
@@ -66,8 +66,7 @@ def profile():
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
-    output = {"email": "{}".format(user.email)}
-    return jsonify(output)
+    return jsonify({"email": user.email})
 
 
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
