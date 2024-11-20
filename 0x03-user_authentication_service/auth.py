@@ -6,7 +6,6 @@ import bcrypt
 from db import DB
 from sqlalchemy.exc import InvalidRequestError
 from db import NoResultFound
-from typing import Type
 from user import User
 import uuid
 
@@ -55,7 +54,7 @@ class Auth:
         self._db.update_user(user.id, session_id=session_id)
         return session_id
 
-    def get_user_from_session_id(self, session_id: str) -> Type[User]:
+    def get_user_from_session_id(self, session_id: str) -> User:
         """ Returns the user matching the given session_id
         """
         try:
