@@ -18,7 +18,7 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> Type[User]:
+    def register_user(self, email: str, password: str) -> User:
         """ Registers and returns a user based on the given email and password
         """
         try:
