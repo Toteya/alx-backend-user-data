@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
-from typing import Dict
+from typing import Any, Dict
 from user import Base, User
 
 
@@ -48,7 +48,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: Dict) -> None:
+    def update_user(self, user_id: int, **kwargs: Dict[str, Any]) -> None:
         """ Updates a user based on the given keyword arguments
         """
         user = self.find_user_by(id=user_id)
