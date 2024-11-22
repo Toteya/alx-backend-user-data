@@ -48,8 +48,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int,
-                    **kwargs: Dict[str, Union[int, str]]) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """ Updates a user based on the given keyword arguments
         """
         user = self.find_user_by(id=user_id)
